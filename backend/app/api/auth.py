@@ -17,11 +17,7 @@ def register(
     user: UserCreate,
     db: Session = Depends(get_db)
 ):
-    print("=" * 50)
-    print("Password:", user.password)
-    print("Length:", len(user.password))
-    print("=" * 50)
-
+    # Check if email already exists
     existing_user = db.query(User).filter(
         User.email == user.email
     ).first()
@@ -32,16 +28,17 @@ def register(
             detail="Email already exists"
         )
 
-    hashed = hash_password(user.password)
+    # Hash password
+    hashed_password = hash_password(user.password)
 
-    print("Hash Generated Successfully")
-
+    # Create new user
     new_user = User(
         full_name=user.full_name,
         email=user.email,
-        hashed_password=hashed
+        hashed_password=hashed_password
     )
 
+    # Save to database
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
