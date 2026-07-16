@@ -1,33 +1,29 @@
 from fastapi import FastAPI
 
 from app.api.auth import router as auth_router
-from app.config.settings import settings
 from app.database.init_db import init_db
 
+# Create database tables
+init_db()
+
 app = FastAPI(
-    title=settings.APP_NAME,
-    version=settings.APP_VERSION,
-    description="AI Powered Financial Fraud Detection System",
+    title="FraudShield AI",
+    version="1.0.0",
+    description="AI Powered Financial Fraud Detection System"
 )
-
-
-@app.on_event("startup")
-def startup():
-    init_db()
-
 
 app.include_router(auth_router)
 
 
 @app.get("/")
-async def root():
+def root():
     return {
-        "message": f"🚀 {settings.APP_NAME} Backend Running"
+        "message": "🚀 FraudShield AI Backend Running"
     }
 
 
 @app.get("/health")
-async def health():
+def health():
     return {
-        "status": "healthy"
+        "status": "Healthy"
     }
