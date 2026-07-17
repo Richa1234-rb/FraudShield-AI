@@ -12,13 +12,27 @@ class User(Base):
 
     full_name = Column(String(100), nullable=False)
 
-    email = Column(String(150), unique=True, index=True, nullable=False)
+    email = Column(
+        String(150),
+        unique=True,
+        index=True,
+        nullable=False
+    )
 
-    hashed_password = Column(String(255), nullable=False)
+    hashed_password = Column(
+        String(255),
+        nullable=False
+    )
 
-    role = Column(String(20), default="user")
+    role = Column(
+        String(20),
+        default="user"
+    )
 
-    is_active = Column(Boolean, default=True)
+    is_active = Column(
+        Boolean,
+        default=True
+    )
 
     created_at = Column(
         DateTime(timezone=True),
@@ -33,5 +47,6 @@ class User(Base):
 
     transactions = relationship(
         "Transaction",
-        back_populates="user"
+        back_populates="user",
+        cascade="all, delete-orphan"
     )

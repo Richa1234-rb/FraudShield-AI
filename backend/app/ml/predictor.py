@@ -1,23 +1,50 @@
-import random
+import joblib
+import pandas as pd
+from pathlib import Path
+
+# -----------------------------
+# Paths
+# -----------------------------
+BASE_DIR = Path(__file__).resolve().parent
+
+MODEL_PATH = BASE_DIR / "models" / "fraud_model.pkl"
+SCALER_PATH = BASE_DIR / "models" / "scaler.pkl"
+
+# -----------------------------
+# Load model and scaler once
+# -----------------------------
+model = joblib.load(MODEL_PATH)
+scaler = joblib.load(SCALER_PATH)
 
 
 def predict_transaction(amount: float):
+    """
+    Predict fraud using trained ML model.
+    """
 
-    if amount < 1000:
-        score = random.uniform(0.01, 0.20)
+    # Dummy feature vector
+    # Dataset has 30 input features.
+    features = [0] * 30
 
-    elif amount < 5000:
-        score = random.uniform(0.20, 0.60)
+    # Time
+    features[0] = 0
 
-    else:
-        score = random.uniform(0.60, 0.99)
+    # Amount
+    features[29] = amount
 
-    prediction = "Fraud" if score > 0.60 else "Safe"
+    # Scale
+    scaled = scaler.transform([features])
 
-    status = "Rejected" if prediction == "Fraud" else "Approved"
+    prediction = model.predict(scaled)[0]
+
+    probability = model.predict_proba(scaled)[0][1]
+
+    result = "Fraud" if prediction == 1 else "Safe"
+
+    status = "Rejected" if prediction == 1 else "Approved"
 
     return {
-        "prediction": prediction,
-        "fraud_score": round(score, 2),
-        "status": status
-    }
+    "prediction": result,
+    "fraud_score": round(float(probability), 4),
+    "status": status
+}

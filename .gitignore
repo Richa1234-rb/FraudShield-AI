@@ -1,0 +1,13 @@
+# Dataset
+backend/app/ml/dataset/
+
+# ML Models
+backend/app/ml/models/*.pkl
+
+# Database
+backend/fraudshield.db
+
+# Python
+backend/venv/
+**/__pycache__/
+*.pyc

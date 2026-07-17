@@ -1,4 +1,11 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import (
+    Column,
+    Integer,
+    Float,
+    String,
+    ForeignKey,
+    DateTime
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -8,7 +15,11 @@ from app.database.session import Base
 class Transaction(Base):
     __tablename__ = "transactions"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
     user_id = Column(
         Integer,
@@ -22,7 +33,7 @@ class Transaction(Base):
     )
 
     merchant = Column(
-        String(150),
+        String(100),
         nullable=False
     )
 
@@ -31,9 +42,19 @@ class Transaction(Base):
         nullable=False
     )
 
-    prediction = Column(
-        String(20),
-        default="Unknown"
+    merchant_encoded = Column(
+        Integer,
+        default=0
+    )
+
+    location_encoded = Column(
+        Integer,
+        default=0
+    )
+
+    transaction_hour = Column(
+        Integer,
+        default=0
     )
 
     fraud_score = Column(
@@ -41,9 +62,14 @@ class Transaction(Base):
         default=0.0
     )
 
+    prediction = Column(
+        String(20),
+        default="Safe"
+    )
+
     status = Column(
-        String(30),
-        default="Pending"
+        String(20),
+        default="Approved"
     )
 
     created_at = Column(
